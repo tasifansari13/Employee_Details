@@ -20,18 +20,18 @@ import com.spring.demo.employeedetails.services.EmployeeService;
 @RequestMapping("/employees")
 public class EmployeeController {
 	@Autowired
-	EmployeeService service;
+	EmployeeService employeeService;
 
 	@GetMapping
 	public ResponseEntity<List<EmployeeEntity>> getAllEmployees() {
-		List<EmployeeEntity> list = service.getAllEmployees();
+		List<EmployeeEntity> list = employeeService.getAllEmployees();
 
 		return new ResponseEntity<List<EmployeeEntity>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<EmployeeEntity> getEmployeeById(@PathVariable("id") Long id) throws Exception {
-		EmployeeEntity entity = service.getEmployeeById(id);
+		EmployeeEntity entity = employeeService.getEmployeeById(id);
 
 		return new ResponseEntity<EmployeeEntity>(entity, new HttpHeaders(), HttpStatus.OK);
 	}
@@ -39,14 +39,24 @@ public class EmployeeController {
 	@PostMapping()
 	public ResponseEntity<EmployeeEntity> createOrUpdateEmployee(EmployeeEntity employee)
 			throws Exception {
-		EmployeeEntity updated = service.createOrUpdateEmployee(employee);
+		EmployeeEntity updated = employeeService.createOrUpdateEmployee(employee);
 		return new ResponseEntity<EmployeeEntity>(updated, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	public HttpStatus deleteEmployeeById(@PathVariable("id") Long id) throws Exception {
-		service.deleteEmployeeById(id);
+		employeeService.deleteEmployeeById(id);
 		return HttpStatus.FORBIDDEN;
+	}
+
+	@GetMapping("/byName/{firstName}")
+	public ResponseEntity<List<EmployeeEntity>> findDetailsByLastName(@PathVariable("firstName") String firstName)
+			throws Exception {
+		System.out.println("-----" + firstName);
+		List<EmployeeEntity> list = employeeService.findDetailsByLastName(firstName);
+
+		return new ResponseEntity<List<EmployeeEntity>>(list, new HttpHeaders(), HttpStatus.OK);
+
 	}
 
 }

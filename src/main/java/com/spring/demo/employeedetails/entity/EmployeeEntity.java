@@ -14,10 +14,10 @@ public class EmployeeEntity {
 	@GeneratedValue
 	private Long id;
 
-	@Column(name = "first_name")
+	@Column()
 	private String firstName;
 
-	@Column(name = "last_name")
+	@Column()
 	private String lastName;
 
 	@Column(name = "email", nullable = false, length = 200)

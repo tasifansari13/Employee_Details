@@ -14,10 +14,10 @@ import com.spring.demo.employeedetails.repository.EmployeeRepository;
 public class EmployeeService {
 
 	@Autowired
-	EmployeeRepository repository;
+	EmployeeRepository employeeRepository;
 
 	public List<EmployeeEntity> getAllEmployees() {
-		List<EmployeeEntity> employeeList = repository.findAll();
+		List<EmployeeEntity> employeeList = employeeRepository.findAll();
 
 		if (employeeList.size() > 0) {
 			return employeeList;
@@ -27,7 +27,7 @@ public class EmployeeService {
 	}
 
 	public EmployeeEntity getEmployeeById(Long id) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(id);
+		Optional<EmployeeEntity> employee = employeeRepository.findById(id);
 
 		if (employee.isPresent()) {
 			return employee.get();
@@ -37,7 +37,7 @@ public class EmployeeService {
 	}
 
 	public EmployeeEntity createOrUpdateEmployee(EmployeeEntity entity) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(entity.getId());
+		Optional<EmployeeEntity> employee = employeeRepository.findById(entity.getId());
 
 		if (employee.isPresent()) {
 			EmployeeEntity newEntity = employee.get();
@@ -45,23 +45,36 @@ public class EmployeeService {
 			newEntity.setFirstName(entity.getFirstName());
 			newEntity.setLastName(entity.getLastName());
 
-			newEntity = repository.save(newEntity);
+			newEntity = employeeRepository.save(newEntity);
 
 			return newEntity;
 		} else {
-			entity = repository.save(entity);
+			entity = employeeRepository.save(entity);
 
 			return entity;
 		}
 	}
 
 	public void deleteEmployeeById(Long id) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(id);
+		Optional<EmployeeEntity> employee = employeeRepository.findById(id);
 
 		if (employee.isPresent()) {
-			repository.deleteById(id);
+			employeeRepository.deleteById(id);
 		} else {
 			throw new Exception("No employee record exist for given id");
 		}
+	}
+
+
+	public List<EmployeeEntity> findDetailsByLastName(String firstName) throws Exception {
+		System.out.println("Inside service" + firstName);
+		EmployeeEntity employee = employeeRepository.getByLastName(firstName);
+		System.out.println("Employee object" + employee);
+		return null;
+//		if (employee.size() > 0) {
+//			return employee;
+//		} else {
+//			return new ArrayList<EmployeeEntity>();
+//		}
 	}
 }

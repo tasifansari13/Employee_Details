@@ -27,5 +27,4 @@ public class EmployeeEntity {
     @MapsId
     private AddressEntity addressEntity;
 
-
 }

@@ -1,67 +1,83 @@
 package com.spring.demo.employeedetails.services;
 
+import com.spring.demo.employeedetails.dto.AddressDto;
+import com.spring.demo.employeedetails.dto.EmployeeDto;
+import com.spring.demo.employeedetails.entity.AddressEntity;
+import com.spring.demo.employeedetails.entity.EmployeeEntity;
+import com.spring.demo.employeedetails.repository.AddressRepository;
+import com.spring.demo.employeedetails.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.spring.demo.employeedetails.entity.EmployeeEntity;
-import com.spring.demo.employeedetails.repository.EmployeeRepository;
-
 @Service
 public class EmployeeService {
 
-	@Autowired
-	EmployeeRepository repository;
+    @Autowired
+    EmployeeRepository repository;
 
-	public List<EmployeeEntity> getAllEmployees() {
-		List<EmployeeEntity> employeeList = repository.findAll();
+    @Autowired
+    AddressRepository addressRepository;
 
-		if (employeeList.size() > 0) {
-			return employeeList;
-		} else {
-			return new ArrayList<EmployeeEntity>();
-		}
-	}
+    public List<EmployeeEntity> getAllEmployees() {
+        List<EmployeeEntity> employeeList = repository.findAll();
 
-	public EmployeeEntity getEmployeeById(Long id) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(id);
+        if (employeeList.size() > 0) {
+            return employeeList;
+        } else {
+            return new ArrayList<EmployeeEntity>();
+        }
+    }
 
-		if (employee.isPresent()) {
-			return employee.get();
-		} else {
-			throw new Exception("No employee record exist for given id");
-		}
-	}
+    public EmployeeEntity getEmployeeById(Long id) throws Exception {
+        Optional<EmployeeEntity> employee = repository.findById(id);
 
-	public EmployeeEntity createOrUpdateEmployee(EmployeeEntity entity) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(entity.getId());
+        if (employee.isPresent()) {
+            return employee.get();
+        } else {
+            throw new Exception("No employee record exist for given id");
+        }
+    }
 
-		if (employee.isPresent()) {
-			EmployeeEntity newEntity = employee.get();
-			newEntity.setEmail(entity.getEmail());
-			newEntity.setFirstName(entity.getFirstName());
-			newEntity.setLastName(entity.getLastName());
+    public void createOrUpdateEmployee(EmployeeEntity entity) throws Exception {
 
-			newEntity = repository.save(newEntity);
 
-			return newEntity;
-		} else {
-			entity = repository.save(entity);
+        repository.save(entity);
 
-			return entity;
-		}
-	}
 
-	public void deleteEmployeeById(Long id) throws Exception {
-		Optional<EmployeeEntity> employee = repository.findById(id);
+    }
 
-		if (employee.isPresent()) {
-			repository.deleteById(id);
-		} else {
-			throw new Exception("No employee record exist for given id");
-		}
-	}
+    public void deleteEmployeeById(Long id) throws Exception {
+        Optional<EmployeeEntity> employee = repository.findById(id);
+
+        if (employee.isPresent()) {
+            repository.deleteById(id);
+        } else {
+            throw new Exception("No employee record exist for given id");
+        }
+    }
+
+    public EmployeeEntity findDetailsByFirstName(String firstName) {
+
+
+        return repository.findByFirstName(firstName);
+
+    }
+
+    public EmployeeDto getEmployeeByAddressId(Long id) {
+
+        AddressEntity addressEntity = addressRepository.findById(id).get();
+
+        AddressDto addressDto = AddressDto.builder().id(addressEntity.getId()).city(addressEntity.getCity()).pinCode(addressEntity.getPinCode()).build();
+
+        EmployeeDto employeeDto = EmployeeDto.builder().id(addressEntity.getEmployeeEntity().getId()).firstName(addressEntity.getEmployeeEntity().getFirstName())
+                .lastName(addressEntity.getEmployeeEntity().getLastName()).addressDto(addressDto).build();
+
+
+        return employeeDto;
+    }
+
 }

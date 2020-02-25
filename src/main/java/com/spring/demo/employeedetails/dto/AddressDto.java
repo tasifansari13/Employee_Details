@@ -17,4 +17,6 @@ public class AddressDto {
     private long pinCode;
 
     private String city;
+
+    private EmployeeDto employeeDto;
 }

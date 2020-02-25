@@ -32,14 +32,19 @@ public class EmployeeService {
         }
     }
 
-    public EmployeeEntity getEmployeeById(Long id) throws Exception {
-        Optional<EmployeeEntity> employee = repository.findById(id);
+    public EmployeeDto getEmployeeById(Long id) throws Exception {
 
-        if (employee.isPresent()) {
-            return employee.get();
-        } else {
-            throw new Exception("No employee record exist for given id");
-        }
+
+        AddressEntity addressEntity = addressRepository.findById(id).get();
+
+        AddressDto addressDto = AddressDto.builder().id(addressEntity.getId()).city(addressEntity.getCity()).pinCode(addressEntity.getPinCode()).build();
+
+        EmployeeDto employeeDto = EmployeeDto.builder().id(addressEntity.getEmployeeEntity().getId()).firstName(addressEntity.getEmployeeEntity().getFirstName())
+                .lastName(addressEntity.getEmployeeEntity().getLastName()).addressDto(addressDto).build();
+
+
+        return employeeDto;
+
     }
 
     public void createOrUpdateEmployee(EmployeeEntity entity) throws Exception {
@@ -67,17 +72,17 @@ public class EmployeeService {
 
     }
 
-    public EmployeeDto getEmployeeByAddressId(Long id) {
+    public AddressDto getEmployeeByAddressId(Long id) {
 
-        AddressEntity addressEntity = addressRepository.findById(id).get();
+        EmployeeEntity employeeEntity = repository.findById(id).get();
 
-        AddressDto addressDto = AddressDto.builder().id(addressEntity.getId()).city(addressEntity.getCity()).pinCode(addressEntity.getPinCode()).build();
+        EmployeeDto employeeDto = EmployeeDto.builder().id(employeeEntity.getId()).firstName(employeeEntity.getFirstName()).lastName(employeeEntity.getLastName()).build();
 
-        EmployeeDto employeeDto = EmployeeDto.builder().id(addressEntity.getEmployeeEntity().getId()).firstName(addressEntity.getEmployeeEntity().getFirstName())
-                .lastName(addressEntity.getEmployeeEntity().getLastName()).addressDto(addressDto).build();
+        AddressDto addressDto = AddressDto.builder().id(employeeEntity.getAddressEntity().getId()).pinCode(employeeEntity.getAddressEntity().getPinCode())
+                .city(employeeEntity.getAddressEntity().getCity()).employeeDto(employeeDto).build();
 
 
-        return employeeDto;
+        return addressDto;
     }
 
 }

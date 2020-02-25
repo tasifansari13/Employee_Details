@@ -1,5 +1,6 @@
 package com.spring.demo.employeedetails.controller;
 
+import com.spring.demo.employeedetails.dto.AddressDto;
 import com.spring.demo.employeedetails.dto.EmployeeDto;
 import com.spring.demo.employeedetails.entity.EmployeeEntity;
 import com.spring.demo.employeedetails.services.EmployeeService;
@@ -27,22 +28,22 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeEntity> getEmployeeById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long id) throws Exception {
 
         log.info("Inside method");
-        EmployeeEntity entity = service.getEmployeeById(id);
+        EmployeeDto entity = service.getEmployeeById(id);
 
-        return new ResponseEntity<EmployeeEntity>(entity, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<EmployeeDto>(entity, new HttpHeaders(), HttpStatus.OK);
     }
 
 
     @GetMapping("/address/{id}")
-    public ResponseEntity<EmployeeDto> getEmployeeByAddressId(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<AddressDto> getEmployeeByAddressId(@PathVariable("id") Long id) throws Exception {
 
         log.info("Inside method");
-        EmployeeDto entity = service.getEmployeeByAddressId(id);
+        AddressDto entity = service.getEmployeeByAddressId(id);
 
-        return new ResponseEntity<EmployeeDto>(entity, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<AddressDto>(entity, new HttpHeaders(), HttpStatus.OK);
     }
 
     @PostMapping("/create")
